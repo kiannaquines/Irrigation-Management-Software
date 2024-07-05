@@ -1,0 +1,21 @@
+{% extends 'base/main_base.html' %}
+{% load static %}
+{% block page_title %}Farmer Portal{% endblock %}
+{% block page_title_desc %}Manage your account{% endblock %}
+
+
+
+{% block content %}
+{% if messages %}
+        {% for message in messages %}
+           
+            {% if message.extra_tags == 'update_my_profile' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+        {% endfor %}
+    {% endif %}
+{% endblock %}

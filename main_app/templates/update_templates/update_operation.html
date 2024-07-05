@@ -1,0 +1,62 @@
+{% extends 'base/main_base.html' %}
+{% load static %}
+{% block page_title %}Update Operation Module{% endblock %}
+{% block page_title_desc %}Update your operation data{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/extensions/simple-datatables/style.css' %}">
+<link rel="stylesheet" href="{% static 'assets/compiled/css/table-datatable.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item" aria-current="page">
+        Operation
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+        Update Opeartion
+    </li>
+    </ol>
+</nav>
+{% endblock%}
+
+{% block content %}
+<section class="section">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Update Operation</h4>
+        </div>
+
+        <div class="card-body">
+           <form method="post">
+                {% csrf_token %}
+                <div class="form-group mt-3">
+                    <label for="{{ form.operation_name.id_for_label }}">{{ form.operation_name.label }}</label>
+                    {{ form.operation_name }}
+                </div>
+
+                <div class="form-group mt-4">
+                    <label for="{{ form.operation_status.id_for_label }}">{{ form.operation_status.label }}</label>
+                    {{ form.operation_status }}
+                </div>
+
+                <div class="form-group mt-4">
+                    <input type="submit" class="btn btn-primary btn-md" value="Save Changes Operation">
+                    <input type="reset" class="btn btn-success btn-md" value="Reset Form">
+                </div>
+
+           </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script src="{% static 'assets/extensions/simple-datatables/umd/simple-datatables.js' %}"></script>
+<script src="{% static 'assets/static/js/pages/simple-datatables.js' %}"></script>
+{% endblock %}

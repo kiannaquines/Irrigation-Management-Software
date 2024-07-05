@@ -1,0 +1,102 @@
+{% extends 'base/main_base.html' %}
+{% load static %}
+{% block page_title %}Operation Module{% endblock %}
+{% block page_title_desc %}Manage your operation data{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/extensions/simple-datatables/style.css' %}">
+<link rel="stylesheet" href="{% static 'assets/compiled/css/table-datatable.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+        Operation List
+    </li>
+    </ol>
+</nav>
+{% endblock%}
+
+{% block content %}
+<section class="section">
+
+    {% if messages %}                    
+        {% for message in messages %}
+            {% if message.extra_tags == 'add_operation' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+
+            {% if message.extra_tags == 'delete_operation' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+
+
+            {% if message.extra_tags == 'edit_operation' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <h4 class="card-title">Operation List</h4>
+
+            <a href="{% url 'add_operation' %}" class="btn btn-primary">Add Operation</a>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-striped" id="table1">
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                        <th>Date Added</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in operations %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'edit_operation' pk=data.operation_id %}" class="fw-bold">{{ data.operation_name }}</a>
+                        </td>
+                        <td>
+                            <span class="badge bg-success">{{ data.operation_status }}</span>
+                        </td>
+                        <td>
+                            <a class="btn btn-white" href="{% url 'delete_operation' pk=data.operation_id %}">
+                                <i class="bi bi-trash text-danger"></i>
+                            </a>
+                        </td>
+                        <td>
+                           {{ data.date_added }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script src="{% static 'assets/extensions/simple-datatables/umd/simple-datatables.js' %}"></script>
+<script src="{% static 'assets/static/js/pages/simple-datatables.js' %}"></script>
+{% endblock %}

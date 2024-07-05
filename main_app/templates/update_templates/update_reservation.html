@@ -1,0 +1,82 @@
+{% extends 'base/main_base.html' %}
+{% load static %}
+{% block page_title %}Update Reservation Module{% endblock %}
+{% block page_title_desc %}Update your reservation data{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/extensions/simple-datatables/style.css' %}">
+<link rel="stylesheet" href="{% static 'assets/compiled/css/table-datatable.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item" aria-current="page">
+        Reservation
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+        Update Reservation
+    </li>
+    </ol>
+</nav>
+{% endblock%}
+
+{% block content %}
+<section class="section">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Update Reservation</h4>
+        </div>
+
+        <div class="card-body">
+           <form method="post">
+                {% csrf_token %}
+                <div class="form-group mt-3">
+                    <label for="{{ form.farmer.id_for_label }}">{{ form.farmer.label }}</label>
+                    {{ form.farmer }}
+                </div>
+
+                <div class="form-group mt-4">
+                    <label for="{{ form.schedule.id_for_label }}">{{ form.schedule.label }}</label>
+                    {{ form.schedule }}
+                </div>
+
+                <div class="form-group mt-4">
+                    <label for="{{ form.end_date.id_for_label }}">{{ form.end_date.label }}</label>
+                    {{ form.end_date }}
+                </div>
+
+                <div class="form-group mt-4">
+                    <label for="{{ form.equipment.id_for_label }}">{{ form.equipment.label }}</label>
+                    {{ form.equipment }}
+                </div>
+
+                <div class="form-group mt-4">
+                    <label for="{{ form.reservation_status.id_for_label }}">{{ form.reservation_status.label }}</label>
+                    {{ form.reservation_status }}
+                </div>
+
+                <div class="form-group mt-4">
+                    <label for="{{ form.confirmation.id_for_label }}">{{ form.confirmation.label }}</label>
+                    {{ form.confirmation }}
+                </div>
+
+                <div class="form-group mt-4">
+                    <input type="submit" class="btn btn-primary btn-md" value="Save Changes Reservation">
+                    <input type="reset" class="btn btn-success btn-md" value="Reset Form">
+                </div>
+
+           </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script src="{% static 'assets/extensions/simple-datatables/umd/simple-datatables.js' %}"></script>
+<script src="{% static 'assets/static/js/pages/simple-datatables.js' %}"></script>
+{% endblock %}

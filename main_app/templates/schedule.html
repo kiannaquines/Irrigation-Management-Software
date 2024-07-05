@@ -1,0 +1,103 @@
+{% extends 'base/main_base.html' %}
+{% load static %}
+{% block title %}Schedule Module{% endblock %}
+{% block page_title %}Schedule Module{% endblock %}
+{% block page_title_desc %}Manage your schedule data{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/extensions/simple-datatables/style.css' %}">
+<link rel="stylesheet" href="{% static 'assets/compiled/css/table-datatable.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+        Schedule List
+    </li>
+    </ol>
+</nav>
+{% endblock%}
+
+{% block content %}
+<section class="section">
+
+    {% if messages %}                    
+        {% for message in messages %}
+            {% if message.extra_tags == 'add_schedule' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+
+            {% if message.extra_tags == 'delete_schedule' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+
+
+            {% if message.extra_tags == 'edit_schedule' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <h4 class="card-title">Schedule List</h4>
+
+            <a href="{% url 'add_schedule' %}" class="btn btn-primary">Add Schedule</a>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-striped" id="table1">
+                <thead>
+                    <tr>
+                        <th>Schedule</th>
+                        <th>Schedule Status</th>
+                        <th>Date Added</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in schedules %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'edit_schedule' pk=data.schedule_id %}" class="fw-bold">{{ data.schedule_date | date:"jS, F, Y" }}</a> 
+                        </td>
+                        <td>
+                            <span class="badge bg-{% if data.schedule_status == 'BOOKED' %}danger{% else %}success{% endif %}">{{ data.schedule_status }}</span>
+                        </td>
+                        <td>
+                           {{ data.date_added }}
+                        </td>
+                        <th>
+                            <a class="btn btn-white" href="{% url 'delete_schedule' pk=data.schedule_id %}">
+                                <i class="bi bi-trash text-danger"></i>
+                            </a>
+                        </th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script src="{% static 'assets/extensions/simple-datatables/umd/simple-datatables.js' %}"></script>
+<script src="{% static 'assets/static/js/pages/simple-datatables.js' %}"></script>
+{% endblock %}

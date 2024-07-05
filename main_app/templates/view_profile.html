@@ -1,0 +1,43 @@
+{% extends 'base/main_base.html' %}
+{% load static %}
+{% block title %}View Land Information Profile{% endblock %}
+{% block page_title %}View Land Information Profile{% endblock %}
+{% block page_title_desc %}Manage your data{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/extensions/simple-datatables/style.css' %}">
+<link rel="stylesheet" href="{% static 'assets/compiled/css/table-datatable.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item" aria-current="page">
+        Users
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+        Users Profile
+    </li>
+    </ol>
+</nav>
+{% endblock%}
+
+
+{% block content %}
+<section class="section">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <h4 class="card-title">{{ profile }}</h4>
+
+            <a href="{% url 'farmer' %}" class="btn btn-primary">Back</a>
+        </div>
+
+        <div class="card-body">
+            <form method="post"></form>
+        </div>
+    </div>
+</section>
+{% endblock %}

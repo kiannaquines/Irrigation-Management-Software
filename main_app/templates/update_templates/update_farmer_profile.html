@@ -1,0 +1,120 @@
+{% extends 'base/main_base.html' %}
+{% load static %}
+{% block page_title %}Update Users Module{% endblock %}
+{% block page_title_desc %}Update your users data{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/extensions/simple-datatables/style.css' %}">
+<link rel="stylesheet" href="{% static 'assets/compiled/css/table-datatable.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item" aria-current="page">
+        Users
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+        Update User
+    </li>
+    </ol>
+</nav>
+{% endblock%}
+
+{% block content %}
+<section class="section">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Update Users</h4>
+        </div>
+
+        <div class="card-body">
+           <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-group mt-3">
+                    <label for="{{ form.lot_number.id_for_label }}">{{ form.lot_number.label }}</label>
+                    {{ form.lot_number }}
+                    <small>{{ form.lot_number.help_text }}</small>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="{{ form.long.id_for_label }}">{{ form.long.label }}</label>
+                    {{ form.long }}
+                    <small>{{ form.long.help_text }}</small>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="{{ form.lat.id_for_label }}">{{ form.lat.label }}</label>
+                    {{ form.lat }}
+                    <small>{{ form.lat.help_text }}</small>
+                </div>
+
+
+                <div class="form-group mt-3">
+                    <label for="{{ form.hectares.id_for_label }}">{{ form.hectares.label }}</label>
+                    {{ form.hectares }}
+                    <small>{{ form.hectares.help_text }}</small>
+                </div>
+
+
+                <div class="form-group mt-3">
+                    <label for="{{ form.square_meter.id_for_label }}">{{ form.square_meter.label }}</label>
+                    {{ form.square_meter }}
+                    <small>{{ form.square_meter.help_text }}</small>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="{{ form.region.id_for_label }}">{{ form.region.label }}</label>
+                    {{ form.region }}
+                    <small>{{ form.region.help_text }}</small>
+                </div>
+
+
+                <div class="form-group mt-3">
+                    <label for="{{ form.province.id_for_label }}">{{ form.province.label }}</label>
+                    {{ form.province }}
+                    <small>{{ form.province.help_text }}</small>
+                </div>
+
+
+                <div class="form-group mt-3">
+                    <label for="{{ form.municipality.id_for_label }}">{{ form.municipality.label }}</label>
+                    {{ form.municipality }}
+                    <small>{{ form.municipality.help_text }}</small>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="{{ form.barangay.id_for_label }}">{{ form.barangay.label }}</label>
+                    {{ form.barangay }}
+                    <small>{{ form.barangay.help_text }}</small>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="{{ form.image.id_for_label }}">{{ form.image.label }}</label>
+                    {{ form.image }}
+                    <small>{{ form.image.help_text }}</small>
+
+                    <small><a href="{% if form.image.value %}{{ form.image.value.url }}{% endif %}">{{ form.image.value }}</a></small>
+                </div>
+
+
+                <div class="form-group mt-4">
+                    <input type="submit" class="btn btn-primary btn-md" value="Save Changes Farmer Profile">
+                    <input type="reset" class="btn btn-success btn-md" value="Reset Form">
+                </div>
+
+           </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script src="{% static 'assets/extensions/simple-datatables/umd/simple-datatables.js' %}"></script>
+<script src="{% static 'assets/static/js/pages/simple-datatables.js' %}"></script>
+{% endblock %}

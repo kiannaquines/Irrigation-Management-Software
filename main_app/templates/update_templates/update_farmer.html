@@ -1,0 +1,63 @@
+{% extends 'base/main_base.html' %}
+{% load static %}
+{% block page_title %}Update Users Module{% endblock %}
+{% block page_title_desc %}Update your users data{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/extensions/simple-datatables/style.css' %}">
+<link rel="stylesheet" href="{% static 'assets/compiled/css/table-datatable.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item" aria-current="page">
+        Users
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+        Update User
+    </li>
+    </ol>
+</nav>
+{% endblock%}
+
+{% block content %}
+<section class="section">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Update Users</h4>
+        </div>
+
+        <div class="card-body">
+
+           <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {{ error }}
+                {% for data in form %}
+                <div class="form-group mt-3">
+                    <label for="{{ data.id_for_label }}">{{ data.label }}</label>
+                    {{ data }}
+                    <small>{{ data.help_text }}</small>
+                </div>
+                {% endfor %}
+
+                <div class="form-group mt-4">
+                    <input type="submit" class="btn btn-primary btn-md" value="Save Changes User">
+                    <input type="reset" class="btn btn-success btn-md" value="Reset Form">
+                </div>
+
+           </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script src="{% static 'assets/extensions/simple-datatables/umd/simple-datatables.js' %}"></script>
+<script src="{% static 'assets/static/js/pages/simple-datatables.js' %}"></script>
+{% endblock %}

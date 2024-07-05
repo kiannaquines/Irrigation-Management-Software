@@ -1,0 +1,217 @@
+{% extends 'base/main_base.html' %}
+{% load static %}
+{% block title %}Payment Module{% endblock %}
+{% block page_title %}Payment Export Module{% endblock %}
+{% block page_title_desc %}Manage & Export your data{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/extensions/simple-datatables/style.css' %}">
+<link rel="stylesheet" href="{% static 'assets/compiled/css/table-datatable.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+        Export Payments
+    </li>
+    </ol>
+</nav>
+{% endblock%}
+
+{% block content %}
+<section class="section">
+
+    {% if messages %}                    
+        {% for message in messages %}
+            {% if message.extra_tags == 'add_payment' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+
+            {% if message.extra_tags == 'delete_payment' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            {% if message.extra_tags == 'edit_payment' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            {% if message.extra_tags == 'no_balance' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+
+            {% if message.extra_tags == 'no_full_payments' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+
+            {% if message.extra_tags == 'no_payments_date' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+            
+
+            {% if message.extra_tags == 'no_payment' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+
+            {% if message.extra_tags == 'invalid_request' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+        {% endfor %}
+    {% endif %}
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between mt-3">
+                <h4 class="card-title" style="font-size: 18px;">Report Type Generator</h4>
+            </div>
+            <form action="{% url 'generate_reports_view' %}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-8">
+                        <div class="form-group">
+                            <select class="form-select" name="report_type" id="ReportType">
+                                <option value="1">Full Paid Report</option>
+                                <option value="2">Balance Report</option>
+                                <option value="3">All Payment Report</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <input type="submit" value="Generate" class="btn btn-primary w-100">
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="d-flex justify-content-between mt-3">
+                <h4 class="card-title" style="font-size: 18px;">Payments Filter</h4>
+            </div>
+            <form action="{% url 'generate_report_by_date' %}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <input type="date" class="form-control" name="current_date" id="current_date" required>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <input type="date" class="form-control" name="future_date" id="future_data" required>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <input type="submit" value="Apply Filter Date" class="btn btn-primary w-100">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <h4 class="card-title">Reports</h4>
+        </div>
+    
+        <div class="card-body">
+            <table class="table table-striped" id="table1">
+                <thead>
+                    <tr>
+                        <th>Equipment</th>
+                        <th>Request by</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Amount Paid</th>
+                        <th>Balance</th>
+                        <th>Date Paid</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in payments %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'edit_payment' pk=data.payment_id%}" class="fw-bold">{{ data.reservation.equipment.eqiupment_name }}</a>
+                        </td>
+                        <td>{{ data.reservation.farmer.first_name }} {{ data.reservation.farmer.last_name }}</td>
+                        <td>{{ data.reservation.farmer.mobile }}</td>
+                        <td>{{ data.reservation.farmer.address }}</td>
+                        <td>{{ data.payment_amount }}</td>
+                        <td>{{ data.balance }}</td>
+                        <td>
+                            {{ data.date_added }}
+                        </td>
+                        <td>
+                            <span class="badge bg-success">{{ data.reservation.payment_status }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <span class="fw-bold">Total Amount</span>
+                        </td>
+                        <td>{{ total_income }}</td>
+                        <td>{{ total_balance }}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script src="{% static 'assets/extensions/simple-datatables/umd/simple-datatables.js' %}"></script>
+<script src="{% static 'assets/static/js/pages/simple-datatables.js' %}"></script>
+<!-- <script>
+    var report = document.getElementById('ReportType')
+    var container = document.getElementById('equipmentContainer')
+    report.addEventListener('change', function(){
+
+        if(report.value == '3'){
+            container.style.display = 'block'
+        }else{
+            container.style.display = 'none'
+        }
+    });
+</script> -->
+{% endblock %}

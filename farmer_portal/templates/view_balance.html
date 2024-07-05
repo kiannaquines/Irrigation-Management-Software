@@ -1,0 +1,68 @@
+{% extends 'base/main_base.html' %}
+{% load static %}
+{% block page_title %}View My Balances{% endblock %}
+{% block page_title_desc %}View your balance{% endblock %}
+
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/extensions/simple-datatables/style.css' %}">
+<link rel="stylesheet" href="{% static 'assets/compiled/css/table-datatable.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <h4 class="card-title">Payment Balances</h4>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-striped" id="table1">
+                <thead>
+                    <tr>
+                        <th>Requested By</th>
+                        <th>Requested Equipment</th>
+                        <th>Partial Amount Paid</th>
+                        <th>Balance</th>
+                        <th>Payment Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in balances %}
+                    <tr>
+                        <td>
+                            <a href="#" class="fw-bold">
+                                {% if request.user.first_name and request.user.last_name %}
+                                    {{ data.farmer.first_name }} {{ data.farmer.last_name }}
+                                {% else %}
+                                    {{ data.farmer.username }}
+                                {% endif %}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="#" class="fw-bold">{{ data.equipment.eqiupment_name }}</a>
+                        </td>
+                        <td>
+                            <span class="badge bg-success">{{ data.payment_amount }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-success">{{ data.balance }}</span>
+                        </td>
+                        <td>
+                           <span class="badge bg-primary">{{ data.payment_type }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script src="{% static 'assets/extensions/simple-datatables/umd/simple-datatables.js' %}"></script>
+<script src="{% static 'assets/static/js/pages/simple-datatables.js' %}"></script>
+{% endblock %}

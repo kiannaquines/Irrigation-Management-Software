@@ -1,0 +1,132 @@
+{% extends 'base/main_base.html' %}
+{% load static %}
+{% block page_title %}Reservation Module{% endblock %}
+{% block page_title_desc %}Manage your reservation data{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/extensions/simple-datatables/style.css' %}">
+<link rel="stylesheet" href="{% static 'assets/compiled/css/table-datatable.css' %}">
+{% endblock %}
+
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="#">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+        Reservation List
+    </li>
+    </ol>
+</nav>
+{% endblock%}
+
+{% block content %}
+<section class="section">
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.extra_tags == 'add_my_reservation' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            {% if message.extra_tags == 'cancelled_reservation' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+
+            {% if message.extra_tags == 'delete_my_reservation' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+
+            {% if message.extra_tags == 'update_my_reservation' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            <!-- TODO: To pass the generate report to the client -->
+
+            {% if message.extra_tags == 'existed_equipment_today_reservation' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+        {% endfor %}
+    {% endif %}
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <h4 class="card-title">My Reservation List</h4>
+
+            <a href="{% url 'add_my_reservation' %}" class="btn btn-primary">Add Reservation</a>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-striped" id="table1">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Phone</th>
+                        <th>Start Schedule</th>
+                        <th>End Date</th>
+                        <th>Requested Equipment</th>
+                        <th>Confirmation Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for data in reservations %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'update_my_reservation' pk=data.reservation_id %}">{{ data.farmer.username }}</a>
+                        </td>
+                        <td>{{ data.farmer.mobile }}</td>
+                        <td>
+                            {{ data.schedule }}
+                        </td>
+                        <td>
+                            {{ data.end_date }}
+                        </td>
+                        <td>
+                            <span class="badge bg-success">{{ data.equipment.eqiupment_name }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-{% if data.confirmation == 'PENDING' %}danger{% elif data.confirmation == 'CANCEL' %}danger{% else %}success{% endif %}">{{ data.confirmation }}</span>
+                        </td>
+                        <td>
+                            <a class="btn btn-white" href="{% url 'delete_my_reservation' pk=data.reservation_id %}">
+                                <i class="bi bi-trash text-danger"></i>
+                            </a>
+
+                            <a class="btn btn-white" href="{% url 'cancel_reservation' pk=data.reservation_id %}">
+                                <i class="bi bi-x-circle text-danger"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script src="{% static 'assets/extensions/simple-datatables/umd/simple-datatables.js' %}"></script>
+<script src="{% static 'assets/static/js/pages/simple-datatables.js' %}"></script>
+{% endblock %}

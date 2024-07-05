@@ -1,0 +1,51 @@
+{% extends 'base/base.html' %}
+{% block title %}Forgot Password{% endblock %}
+
+{% block content %}
+<div id="auth">
+    <div class="row h-100">
+        <div class="col-lg-5 col-12">
+            <div id="auth-left">
+                <h1 class="auth-title">Password Reset.</h1>
+
+                {% if user_not_found %}                    
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ user_not_found }}
+                        <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+
+                <form action="{% url 'reset' %}" method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="form-group position-relative has-icon-left mb-4">
+                        {{ form.email }}
+                        <div class="form-control-icon">
+                            <i class="bi bi-envelope"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group position-relative has-icon-left mb-4">
+                        {{ form.mobile }}
+                        <div class="form-control-icon">
+                            <i class="bi bi-phone"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block btn-lg shadow-lg">Request Password Reset</button>
+                </form>
+                <div class="text-center mt-5 text-lg fs-4">
+                    <p class="text-gray-600">Already have an account? <a href="{% url 'login' %}" class="font-bold">Sign
+                            in</a>.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7 d-none d-lg-block">
+            <div id="auth-right">
+    
+            </div>
+        </div>
+    </div>
+    
+        </div>
+{% endblock %}

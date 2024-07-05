@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" href="{% static 'assets/logo.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'assets/compiled/css/app.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/compiled/css/app-dark.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/compiled/css/iconly.css' %}">
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    <script src="{% static 'assets/static/js/initTheme.js' %}"></script>
+    <div id="app">
+      {% if request.user.is_staff and request.user.is_superuser %}
+      {% include 'includes/sidebar.html' %}
+      {% else %}
+      {% include 'includes/user_sidebar.html' %}
+      {% endif %}
+      <div id="main">
+        <div class="page-heading">
+          <div class="page-title">
+            <div class="row">
+              <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>{% block page_title %}{% endblock %}</h3>
+                <p class="text-subtitle text-muted">{% block page_title_desc %}{% endblock %}</p>
+              </div>
+              <div class="col-12 col-md-6 order-md-2 order-first">
+                {% block breadcrumb %}{% endblock %}
+              </div>
+            </div>
+          </div>
+
+          {% block content %}{% endblock %}
+        </div>
+
+        <footer>
+          <div class="footer clearfix mb-0 text-muted">
+            <div class="float-start">
+              <p>2023 &copy; Irrigators Association</p>
+            </div>
+            <div class="float-end">
+              <p>
+                Created with
+                <span class="text-danger"
+                  ><i class="bi bi-heart-fill icon-mid"></i
+                ></span>
+                by <a href="#">Irrigators Association</a>
+              </p>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </body>
+  <script src="{% static 'assets/static/js/components/dark.js' %}"></script>
+  <script src="{% static 'assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
+  <script src="{% static 'assets/compiled/js/app.js' %}"></script>
+
+  {% block extra_scripts %}{% endblock %}
+</html>

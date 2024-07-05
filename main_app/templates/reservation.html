@@ -1,0 +1,116 @@
+{% extends 'base/main_base.html' %}
+{% load static %}
+{% block title %}Reservation Module{% endblock %}
+{% block page_title %}Reservation Module{% endblock %}
+{% block page_title_desc %}Manage your reservation data{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/extensions/simple-datatables/style.css' %}">
+<link rel="stylesheet" href="{% static 'assets/compiled/css/table-datatable.css' %}">
+{% endblock %}
+
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+        Reservation List
+    </li>
+    </ol>
+</nav>
+{% endblock%}
+
+{% block content %}
+<section class="section">
+
+    {% if messages %}                    
+        {% for message in messages %}
+            {% if message.extra_tags == 'add_reservation' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+
+            {% if message.extra_tags == 'delete_reservation' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+
+
+            {% if message.extra_tags == 'edit_reservation' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <h4 class="card-title">Reservation List</h4>
+
+            <a href="{% url 'add_reservation' %}" class="btn btn-primary">Add Reservation</a>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-striped" id="table1">
+                <thead>
+                    <tr>
+                        <th>Reserve By</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Choosen Schedule</th>
+                        <th>Confirmation Status</th>
+                        <th>Reserved Equipment</th>
+                        <th>Payment Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for data in reservation %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'edit_reservation' pk=data.reservation_id %}" class="fw-bold">{{ data.farmer.first_name }} {{ data.farmer.last_name }}</a>
+                        </td>
+                        <td>{{ data.farmer.mobile }}</td>
+                        <td>{{ data.farmer.address }}</td>
+                        <td>
+                            {{ data.schedule }}
+                        </td>
+                        <td>
+                            <span class="badge bg-{% if data.confirmation == 'PENDING' %}danger{% elif data.confirmation == 'CANCEL' %}danger{% else %}success{% endif %}">{{ data.confirmation }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-success">{{ data.equipment.eqiupment_name }}</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-success">{{ data.payment_status }}</span>
+                        </td>
+                        <td>
+                            <a class="btn btn-white" href="{% url 'delete_reservation' pk=data.reservation_id %}">
+                                <i class="bi bi-trash text-danger"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script src="{% static 'assets/extensions/simple-datatables/umd/simple-datatables.js' %}"></script>
+<script src="{% static 'assets/static/js/pages/simple-datatables.js' %}"></script>
+{% endblock %}

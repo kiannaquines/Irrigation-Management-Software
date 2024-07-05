@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" href="{% static 'assets/logo.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'assets/compiled/css/app.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/compiled/css/app-dark.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/compiled/css/iconly.css' %}">
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    <script src="{% static 'assets/static/js/initTheme.js' %}"></script>
+    <div id="app">
+      {% if request.user.is_staff and request.user.is_superuser %}
+      {% include 'includes/sidebar.html' %}
+      {% else %}
+      {% include 'includes/user_sidebar.html' %}
+      {% endif %}
+
+
+      {% block content %}{% endblock %}
+        
+    </div>
+  </body>
+  <script src="{% static 'assets/static/js/components/dark.js' %}"></script>
+  <script src="{% static 'assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
+  <script src="{% static 'assets/compiled/js/app.js' %}"></script>
+  
+  {% block extra_scripts %}{% endblock %}
+</html>

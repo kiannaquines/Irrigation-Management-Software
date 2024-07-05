@@ -1,0 +1,200 @@
+{% extends 'base/map_base.html' %}
+{% load static %}
+{% block page_title_desc %} Manage your users data{% endblock %}
+
+{% block extra_css %}
+<link
+href="https://fonts.googleapis.com/css?family=Open+Sans"
+rel="stylesheet"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'assets/extensions/simple-datatables/style.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static 'assets/compiled/css/table-datatable.css' %}"
+/>
+<link
+  href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css"
+  rel="stylesheet"
+/>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+    }
+
+    #section {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 300px;
+        right: 0;
+    }
+
+    #map {
+        width: 100%;
+        height: 100%;
+    }
+
+    .marker {
+        background-image: url('{% static "assets/static/images/map_marker.png" %}');
+        background-size: cover;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    @media only screen and (min-width: 600px) {
+        #section {
+        left: 0;
+        }
+    }
+
+    @media only screen and (max-width: 600px) {
+        #section {
+            left: 0;
+        }
+    }
+
+    .mapboxgl-popup {
+        max-width: 400px;
+        font: 12px/20px "Helvetica Neue", Arial, Helvetica, sans-serif;
+    }
+
+
+    .mapboxgl-popup-content {
+        text-align: justify;
+        font-family: 'Open Sans', sans-serif;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section id="section" class="section"></section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'assets/extensions/simple-datatables/umd/simple-datatables.js' %}"></script>
+<script src="{% static 'assets/static/js/pages/simple-datatables.js' %}"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+<script>
+
+
+  mapboxgl.accessToken =
+    "pk.eyJ1IjoibmlraWUwMiIsImEiOiJjbHE4MXMwY28wYmdtMm1veWJmejcxMnNqIn0.tEhTkK4rHuSiw7o4ioXHfg";
+
+
+    const geojson = {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: {
+                title: 'Land Information',
+              description:
+                    `<strong>Region:</strong> Region 12 <br>
+                    <strong>Provice:</strong> North Cotabato <br>
+                    <strong>Municipality:</strong> Kabacan <br>
+                    <strong>Barangay:</strong> Malamote <br> <br>
+                    <strong>Farmer Information & Location</strong> <br>
+                    <strong>Land Owner :</strong> Kian Jearard G. Naquines <br>
+                    <strong>Land Longitude :</strong> 124.867215 <br>
+                    <strong>Land Latitude :</strong> 7.055481 <br>
+                    `,
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [124.867215,7.055481],
+            },
+          },
+          {
+            type: "Feature",
+            properties: {
+                title: 'Land Information',
+                description:
+                    `<strong>Region:</strong> Region 12 <br>
+                    <strong>Provice:</strong> North Cotabato <br>
+                    <strong>Municipality:</strong> Kabacan <br>
+                    <strong>Barangay:</strong> Malamote <br> <br>
+                    <strong>Farmer Information & Location</strong> <br>
+                    <strong>Land Owner :</strong> Richard Gordon <br>
+                    <strong>Land Longitude :</strong> 124.867215 <br>
+                    <strong>Land Latitude :</strong> 7.055481 <br>
+                    `,
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [124.875180,7.054050],
+            },
+          },
+          {
+            type: "Feature",
+            properties: {
+                title: 'Land Information',
+                description:
+                    `<strong>Region:</strong> Region 12 <br>
+                    <strong>Provice:</strong> North Cotabato <br>
+                    <strong>Municipality:</strong> Kabacan <br>
+                    <strong>Barangay:</strong> Malamote <br> <br>
+                    <strong>Farmer Information & Location</strong> <br>
+                    <strong>Land Owner :</strong> Jennifer Escote <br>
+                    <strong>Land Longitude :</strong> 124.867215 <br>
+                    <strong>Land Latitude :</strong> 7.055481 <br>
+                    `,
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [124.875112,7.057868],
+            },
+          },
+          {
+            type: "Feature",
+            properties: {
+                title: 'Land Information',
+                description:
+                    `<strong>Region:</strong> Region 12 <br>
+                    <strong>Provice:</strong> North Cotabato <br>
+                    <strong>Municipality:</strong> Kabacan <br>
+                    <strong>Barangay:</strong> Malamote <br> <br>
+                    <strong>Farmer Information & Location</strong> <br>
+                    <strong>Land Owner :</strong> Elizabeth R. Genotiva <br>
+                    <strong>Land Longitude :</strong> 124.867215 <br>
+                    <strong>Land Latitude :</strong> 7.055481 <br>
+                    `,
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [124.868451,7.054186],
+            },
+          },
+        ],
+      },
+    };
+
+    const map = new mapboxgl.Map({
+        container: "section",
+        style: "mapbox://styles/mapbox/dark-v11",
+        center: [124.867078,7.050709],
+        zoom: 11.3,
+    });
+
+    
+
+    for (const feature of geojson.data.features) {
+        const el = document.createElement('div');
+        el.className = 'marker';
+
+        new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).addTo(map);
+
+        new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).setPopup(
+        new mapboxgl.Popup({ offset: 25 }).setHTML(
+        `<h5>${feature.properties.title}</h5><p>${feature.properties.description}</p>`
+        )).addTo(map);
+    }
+</script>
+{% endblock %}

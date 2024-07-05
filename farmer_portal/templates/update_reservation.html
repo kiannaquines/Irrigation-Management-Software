@@ -1,0 +1,45 @@
+{% extends 'base/main_base.html' %}
+{% load static %}
+{% block page_title %}Update My Reservation{% endblock %}
+{% block page_title_desc %}Update your reservation{% endblock %}
+
+
+{% block content %}
+<section class="section">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Update Reservation</h4>
+        </div>
+
+        <div class="card-body">
+           <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-group mt-4">
+                    <label for="{{ form.schedule.id_for_label }}">{{ form.schedule.label }}</label>
+                    {{ form.schedule }}
+                    <small>{{ form.schedule.help_text }}</small>
+                </div>
+
+                <div class="form-group mt-4">
+                    <label for="{{ form.end_date.id_for_label }}">{{ form.end_date.label }}</label>
+                    {{ form.end_date }}
+                    <small>{{ form.end_date.help_text }}</small>
+                </div>
+
+                <div class="form-group mt-4">
+                    <label for="{{ form.equipment.id_for_label }}">{{ form.equipment.label }}</label>
+                    {{ form.equipment }}
+                    <small>{{ form.equipment.help_text }}</small>
+                </div>
+
+                <div class="form-group mt-4">
+                    <input type="submit" class="btn btn-primary btn-md" value="Save Reservation Changes">
+                    <input type="reset" class="btn btn-success btn-md" value="Reset Form">
+                </div>
+
+           </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

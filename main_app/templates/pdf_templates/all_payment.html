@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Irrigation Management System - Report</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300&family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+</head>
+<style>
+
+    *, body{
+      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    @page {
+        size: letter landscape;
+        margin: 2cm;
+    }
+
+    table{
+        border-collapse: collapse;
+    }
+
+    table tr th{
+        background-color: #00911A;
+        color: #fff;
+        text-align: center;
+    }
+
+    table tr td{
+        text-align: center;
+    }
+
+    table, th, td {
+      border:0.6px solid black;
+    }
+</style>
+<body>
+
+    <div style="margin: 20px;">
+      <button id="download-pdf">Download Report PDF</button>
+    </div>
+
+    
+    <div id="parent" style="margin: 20px;">
+      <div style="text-align: center; margin: auto; position: relative;">
+        <div style="text-align: center; display: block;">
+            <img src="{% static 'assets/logo.png' %}" style="width: 90px; height: 90px; position: absolute; top: 0; left: 0; margin-bottom: 10px;" alt="">
+            <span style="font-weight: 700;">Management Information System</span> <br>
+            <span style="font-weight: 700;">Irrigators Association</span> <br>
+            <span style="font-weight: 700;">Payments Report</span> <br>
+            <span style="font-weight: 700;">{{ current_date }}</span> <br>
+        </div>
+      </div>
+      <table style="width:100%; margin-top: 30px;">
+          <tr>
+            <th>Equipment</th>
+            <th>Farmer Name</th>
+            <th>Schedule</th>
+            <th>Amount</th>
+            <th>Balance</th>
+            <th>Type</th>
+            <th>Date Paid</th>
+          </tr>
+
+          {% if all_payment %}
+            {% regroup all_payment by reservation.equipment.eqiupment_name as grouped %}
+            {% for equipment in grouped %}
+              <tr>
+                <td rowspan="{{ equipment.list|length }}">{{ equipment.grouper }}</td>
+                {% for data in equipment.list %}
+                  <td>{{ data.reservation.farmer.first_name }} {{ data.reservation.farmer.last_name }}</td>
+                  <td>{{ data.reservation.schedule }}</td>
+                  <td>{{ data.payment_amount }}</td>
+                  <td>{{ data.balance }}</td>
+                  <td>{{ data.payment_type }}</td>
+                  <td>{{ data.date_added }}</td>
+                </tr>
+              {% endfor %}
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="7" style="text-align: center;">No payment</td>
+            </tr>
+          {% endif %}
+
+          
+            
+      </table>
+      <div style="display: flex; justify-content: space-between; text-align: left; margin-top: 40px; align-items: center; width: 90%;">
+          <span style="font-weight: 700; font-style: italic; font-size: 13px;">Prepared by: <br> &emsp;&emsp;&emsp; &emsp; &emsp;&emsp;<span style="font-weight: 700;"> ERLA E. SIANOYA</span> <br> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; <span>IA Treasurer</span> </span>
+          <span style="font-weight: 700; font-style: italic; font-size: 13px;">Audited by: <br> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<span style="font-weight: 700;">JOSEPHINE P. RODUTA</span> <br> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; <span>IA Auditor</span> </span>
+          <span style="font-weight: 700; font-style: italic; font-size: 13px;">Approved by: <br> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; <span style="font-weight: 700;">NOEL P. PACIA</span> <br> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; <span>IA President</span> </span>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById('download-pdf').addEventListener('click', function () {
+        var date = new Date()
+      
+          var opt = {
+            filename:     `All-Payment-Report-${date.getDay()}-${date.getMonth()}-${date.getFullYear()}-${date.getUTCHours()}.pdf`,
+            image:        { type: 'png', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+          };
+
+          var element = document.getElementById('parent');
+          html2pdf().set(opt).from(element).save();;
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+{% extends 'base/main_base.html' %}
+{% load static %}
+{% block title %}Users Module{% endblock %}
+{% block page_title %}Users Module{% endblock %}
+{% block page_title_desc %}Manage your users data{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/extensions/simple-datatables/style.css' %}">
+<link rel="stylesheet" href="{% static 'assets/compiled/css/table-datatable.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+        Users List
+    </li>
+    </ol>
+</nav>
+{% endblock%}
+
+{% block content %}
+<section class="section">
+
+    {% if messages %}                    
+        {% for message in messages %}
+            {% if message.extra_tags == 'add_user' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+            {% if message.extra_tags == 'delete_user' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+
+            {% if message.extra_tags == 'edit_user' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+
+            {% if message.extra_tags == 'update_userprofile' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+
+            {% if message.extra_tags == 'active_account_message' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close text-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+
+        {% endfor %}
+    {% endif %}
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between">
+            <h4 class="card-title">Users List</h4>
+
+            <a href="{% url 'add_user' %}" class="btn btn-primary">Add Users</a>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-striped" id="table1">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Gender</th>
+                        <th>Mobile</th>
+                        <th>Activate</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in farmer %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'edit_user' pk=data.id %}" class="fw-bold">{{ data.username }}</a> 
+                        </td>
+                        <td>
+                            {{ data.email }}
+                        </td>
+                        <th>
+                            {{ data.first_name }}
+                        </th>
+                        <th>
+                            {{ data.last_name }}
+                        </th>
+                        <th>
+                            {{ data.get_gender_display }}
+                        </th>
+                        <th>
+                            {{ data.mobile }}
+                        </th>
+                        <th>
+                            {% if data.is_active == True %}
+                            <a class="btn btn-success btn-sm text-white" href="#">
+                                Active
+                            </a>
+                            {% else %}
+                            <form action="{% url 'activate_account' pk=data.id %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="user_id" value="{{ data.id }}">
+                                <input type="submit" class="btn btn-primary btn-sm" value="Activate">
+                            </form>
+                            {% endif %}
+                        </th>
+                        <th>
+                            <a class="btn btn-white" href="{% url 'delete_user' pk=data.id %}">
+                                <i class="bi bi-trash text-danger"></i>
+                            </a>
+
+                            <a class="btn btn-white" href="{% url 'update_profile' pk=data.id %}">
+                                <i class="bi bi-eye text-primary"></i>
+                            </a>
+                        </th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script src="{% static 'assets/extensions/simple-datatables/umd/simple-datatables.js' %}"></script>
+<script src="{% static 'assets/static/js/pages/simple-datatables.js' %}"></script>
+{% endblock %}

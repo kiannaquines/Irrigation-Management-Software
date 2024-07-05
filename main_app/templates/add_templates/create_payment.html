@@ -1,0 +1,145 @@
+{% extends 'base/main_base.html' %}
+{% load static %}
+{% block page_title %}Add Payment Module{% endblock %}
+{% block page_title_desc %}Add your payment data{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/extensions/simple-datatables/style.css' %}">
+<link rel="stylesheet" href="{% static 'assets/compiled/css/table-datatable.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
+    <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item" aria-current="page">
+        Payment
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+        Add Payment
+    </li>
+    </ol>
+</nav>
+{% endblock%}
+
+{% block content %}
+<section class="section">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Create Payment</h4>
+        </div>
+
+        <div class="card-body">
+           <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group mt-4">
+                    <label for="{{ form.reservation.id_for_label }}">{{ form.reservation.label }}</label>
+                    {{ form.reservation }}
+                </div>
+
+                <div class="form-group mt-4">
+                    <label for="{{ form.payment_amount.id_for_label }}">{{ form.payment_amount.label }}</label>
+                    {{ form.payment_amount }}
+                    <small>Manually type the amount? <a href='#' id='edit_amount'>Click here to edit</a></small>
+                </div>
+
+                <div class="form-group mt-4">
+                    <label for="{{ form.payment_type.id_for_label }}">{{ form.payment_type.label }}</label>
+                    {{ form.payment_type }}
+                </div>
+
+                <div class="form-group mt-4" id="balanceInput">
+                    <label for="{{ form.balance.id_for_label }}">{{ form.balance.label }}</label>
+                    {{ form.balance }}
+                    <small>{{ form.balance.help_text }}</small>
+                </div>
+
+
+
+                <div class="form-group mt-4">
+                    <input type="submit" class="btn btn-primary btn-md" value="Create Payment">
+                    <input type="reset" class="btn btn-success btn-md" value="Reset Form">
+                </div>
+
+           </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script>
+    window.onload = function(){
+        var reservationValue = document.getElementById("id_reservation").value
+        var csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        var body = 'reservation='+reservationValue;
+
+        var xhr = new XMLHttpRequest()
+        xhr.open('POST','/main/change_payment_value/',true);
+        xhr.setRequestHeader('X-CSRFToken', csrfToken);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState === 4 && xhr.status === 200){
+                var response = JSON.parse(xhr.responseText);
+                document.getElementById("id_payment_amount").value = response.amount
+            }
+        }
+        xhr.send(body);
+    }
+
+    document.getElementById("id_payment_type").addEventListener("change", function(e){
+        e.preventDefault()
+
+        const MyValue = e.target.value
+
+        if(MyValue == 'HALF PAID'){
+            document.getElementById("balanceInput").style.display = 'block'
+        }else{
+            document.getElementById("balanceInput").style.display = 'none'
+        }
+    })
+
+    var balanceInput = document.getElementById("balanceInput")
+    balanceInput.style.display = 'none'
+
+    document.getElementById("edit_amount").addEventListener("click", function(e){
+        e.preventDefault()
+        var myinput = document.getElementById("id_payment_amount")
+        myinput.removeAttribute('readonly')
+        myinput.focus()
+
+        alert('You can now edit the amount.')
+    });
+
+    document.getElementById("id_reservation").addEventListener("change", function(e){
+        e.preventDefault();
+
+        var reservationInputValue = e.target.value
+        var csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        var body = 'reservation='+reservationInputValue;
+
+        var xhr = new XMLHttpRequest()
+        xhr.open('POST','/main/change_payment_value/',true);
+        xhr.setRequestHeader('X-CSRFToken', csrfToken);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState === 4 && xhr.status === 200){
+                var response = JSON.parse(xhr.responseText);
+
+                if(response.message){
+                    alert(response.message)
+                    document.getElementById("id_payment_amount").value = response.amount
+                    return;
+                }
+
+                document.getElementById("id_payment_amount").value = response.amount
+            }
+        }
+        xhr.send(body);
+    });
+</script>
+{% endblock %}
